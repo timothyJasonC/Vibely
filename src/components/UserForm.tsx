@@ -57,12 +57,10 @@ function UserForm({ type }: UserFormProps) {
                 await signInWithEmailAndPassword(auth, values.email, values.password);
                 const token = await credentialsLogin(values.email, 'email')
 
-                Cookie.set('auth_token', token)
-
                 toast.success("Login successful");
                 setTimeout(() => {
                     toast.success("Redirecting to Dashboard")
-                    router.push('/')
+                    createToken(token, '/')
                 }, 1500);
             } catch (error) {
                 toast.error('Email Or Password Wrong')
@@ -79,8 +77,6 @@ function UserForm({ type }: UserFormProps) {
                 await googleLogin(user.email!, user.photoURL!, user.displayName!)
 
                 const token = await credentialsLogin(user.email!, 'google')
-
-                // Cookie.set('auth_token', token)
 
                 toast.success("Login successful");
                 setTimeout(() => {

@@ -1,6 +1,4 @@
 import { NextResponse, NextRequest } from 'next/server';
-import Cookie from 'js-cookie';
-
 
 const protectedPages = ['/'];
 
