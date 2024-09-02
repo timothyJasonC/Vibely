@@ -47,15 +47,9 @@ export const getUserCredentials = async (token: string) => {
         const data = verify(token, process.env.KEY_JWT!) as JwtPayload;
         if (data.id) {
             const user = await User.findById(data.id);
-            console.log(data.id);
-            console.log(user);
-
             return {user}
         }
     } catch (error) {
         return "Something went wrong please login again"
     }
-
-
-
 }

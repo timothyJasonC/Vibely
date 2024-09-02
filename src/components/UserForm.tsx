@@ -83,6 +83,8 @@ function UserForm({ type }: UserFormProps) {
             }
         } catch (error) {
             toast.error("Error logging in with Google:")
+            console.log(error);
+            
         }
     };
 

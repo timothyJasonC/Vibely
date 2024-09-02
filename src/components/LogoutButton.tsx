@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/firebase/config';
 
 const LogoutButton = () => {
     const router = useRouter();
@@ -14,7 +16,7 @@ const LogoutButton = () => {
         Object.keys(allCookies).forEach(cookieName => {
             Cookies.remove(cookieName);
         });
-
+        signOut(auth)
         toast.success('Logout successful');
 
         setTimeout(() => {
