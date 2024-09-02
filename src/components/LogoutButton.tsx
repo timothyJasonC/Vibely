@@ -25,7 +25,7 @@ const LogoutButton = () => {
     return (
         <Button
             onClick={handleLogout}
-            className="bg-red-500 text-white font-bold rounded-md"
+            className="bg-red-500 mt-64 ml-32 text-white font-bold rounded-md"
         >
             Logout
         </Button>

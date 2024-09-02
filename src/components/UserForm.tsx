@@ -6,11 +6,10 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { Input } from "@/components/ui/input"
 import { userDefaultValues } from '@/constants'
 import { auth } from "@/firebase/config";
-import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, getIdToken } from "firebase/auth"
+import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth"
 import { createToken, credentialsLogin, googleLogin } from "@/database/actions/user.action"
 import { toast } from "sonner"
-import { useRouter, useSearchParams } from "next/navigation"
-import Cookie from 'js-cookie';
+import { useRouter } from "next/navigation"
 
 
 type UserFormProps = {
@@ -19,8 +18,6 @@ type UserFormProps = {
 
 function UserForm({ type }: UserFormProps) {
     const router = useRouter()
-    const search = useSearchParams()
-    const redirect = search.get('redirect') || '/'
     const formSchema = z.object({
         email: z.string().email().nonempty("Email is required"),
         password: z.string().min(4, "Password must be at least 4 characters").max(30),
@@ -92,14 +89,14 @@ function UserForm({ type }: UserFormProps) {
     return (
         <>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-[250px] gap-2">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-[356px] gap-2">
                     <FormField
                         control={form.control}
                         name="email"
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Input placeholder="Masukkan Email" {...field} className="bg-main placeholder:text-black p-2 text-xs rounded-md" />
+                                    <Input placeholder="Masukkan Email" {...field} className="bg-main placeholder:text-black p-3 text-xs rounded-md" />
                                 </FormControl>
                                 <FormMessage className='text-xs' />
                             </FormItem>
@@ -111,13 +108,13 @@ function UserForm({ type }: UserFormProps) {
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Input type="password" placeholder="Masukkan Password" {...field} className="bg-main placeholder:text-black p-2 text-xs rounded-md" />
+                                    <Input type="password" placeholder="Masukkan Password" {...field} className="bg-main placeholder:text-black p-3 text-xs rounded-md" />
                                 </FormControl>
                                 <FormMessage className='text-xs' />
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="bg-primary-100 text-white font-bold text-xl rounded-md">{type == 'Register' ? 'CREATE' : 'LOGIN'}</Button>
+                    <Button type="submit" className="bg-primary-100 p-1 text-white font-bold text-2xl rounded-md">{type == 'Register' ? 'CREATE' : 'LOGIN'}</Button>
                 </form>
             </Form>
 
@@ -126,7 +123,7 @@ function UserForm({ type }: UserFormProps) {
                 <h1 className="font-thin bg-white absolute -left-[14px] p-1">OR</h1>
             </div>
 
-            <button onClick={loginWithGoogle} className=" border-2 border-primary-100 w-full font-bold text-xl rounded-md mt-8 hover:bg-primary-100 transition-all hover:text-white">GOOGLE</button>
+            <button onClick={loginWithGoogle} className=" border-2 p-1 border-primary-100 w-full font-bold text-2xl rounded-md mt-8 hover:bg-primary-100 transition-all hover:text-white">GOOGLE</button>
 
         </>
 

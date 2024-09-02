@@ -22,12 +22,12 @@ export default async function RootLayout({
     <html lang="en">
       <body className={poppins.className}>
 
-        <main className="bg-primary-50 w-full h-screen relative  items-center flex">
+        <main className="bg-primary-50 w-full h-full  p-12 relative  items-center flex">
           <section className=" w-[537px] mx-auto  border-2 border-main h-[955px] rounded-3xl bg-white overflow-hidden">
             {children}
           </section>
         </main>
-          <Toaster  position="top-center" richColors/>
+        <Toaster position="top-center" richColors />
 
       </body>
     </html>
