@@ -35,31 +35,19 @@ export const googleLogin = async (email: string, profilePhoto: string, username:
 }
 
 export const credentialsLogin = async (email: string, provider: string, password?: string) => {
-    const user = await User.findOne({ email, provider })
-    if (provider === 'email') {
-        const passOk = await bcrypt.compare(password!, user.password)
-        if (passOk) {
-            const payload = {
-                id: user.id,
-            }
-            const token = sign(payload, process.env.KEY_JWT!, {})
-            return token
-        }
-        return 'Wrong Password'
-    } else {
-        const payload = {
-            id: user.id,
-        }
-        const token = sign(payload, process.env.KEY_JWT!, {})
-        return token
+    const payload = {
+        email: email,
+        provider: provider
     }
+    const token = sign(payload, process.env.KEY_JWT!, {})
+    return token
 }
 
 export const getUserCredentials = async (token: string) => {
     try {
         const data = verify(token, process.env.KEY_JWT!) as JwtPayload;
-        if (data.id) {
-            const user = await User.findById(data.id);
+        if (data) {
+            const user = await User.findOne({email: data.email, provider: data.provider});
             return { user }
         }
     } catch (error) {

@@ -51,16 +51,15 @@ function UserForm({ type }: UserFormProps) {
 
         if (type === 'Login') {
             try {
-                const token = await credentialsLogin(values.email, 'email', values.password)
+                await signInWithEmailAndPassword(auth, values.email, values.password);
+                const token = await credentialsLogin(values.email, 'email')
                 console.log(token);
-                
-                if (token === 'Wrong Password') throw new Error(token)
                 toast.success("Login successful");
                 setTimeout(() => {
                     toast.success("Redirecting to Dashboard")
                     createToken(token!, '/')
                 }, 1500)
-            } catch (error:any) {
+            } catch (error: any) {
                 toast.error(error.message)
             }
         }
