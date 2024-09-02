@@ -53,6 +53,7 @@ function UserForm({ type }: UserFormProps) {
             try {
                 await signInWithEmailAndPassword(auth, values.email, values.password);
                 const token = await credentialsLogin(values.email, 'email')
+                console.log(`token: ${token}`);
 
                 toast.success("Login successful");
                 setTimeout(() => {
@@ -84,7 +85,7 @@ function UserForm({ type }: UserFormProps) {
         } catch (error) {
             toast.error("Error logging in with Google:")
             console.log(error);
-            
+
         }
     };
 
