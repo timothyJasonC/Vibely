@@ -5,6 +5,7 @@ import User from "../models/user.model"
 import { handleError } from "@/lib/utils"
 import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { redirect } from "next/navigation";
+import bcrypt from 'bcryptjs'
 
 export async function createToken(token: string, url: string) {
     cookies().set('auth_token', token)
@@ -33,13 +34,25 @@ export const googleLogin = async (email: string, profilePhoto: string, username:
     }
 }
 
-export const credentialsLogin = async (email: string, provider: string) => {
+export const credentialsLogin = async (email: string, provider: string, password?: string) => {
     const user = await User.findOne({ email, provider })
-    const payload = {
-        id: user.id,
+    if (provider === 'email') {
+        const passOk = await bcrypt.compare(password!, user.password)
+        if (passOk) {
+            const payload = {
+                id: user.id,
+            }
+            const token = sign(payload, process.env.KEY_JWT!, {})
+            return token
+        }
+        return 'Wrong Password'
+    } else {
+        const payload = {
+            id: user.id,
+        }
+        const token = sign(payload, process.env.KEY_JWT!, {})
+        return token
     }
-    const token = sign(payload, process.env.KEY_JWT!, {})
-    return token
 }
 
 export const getUserCredentials = async (token: string) => {
@@ -47,7 +60,7 @@ export const getUserCredentials = async (token: string) => {
         const data = verify(token, process.env.KEY_JWT!) as JwtPayload;
         if (data.id) {
             const user = await User.findById(data.id);
-            return {user}
+            return { user }
         }
     } catch (error) {
         return "Something went wrong please login again"
