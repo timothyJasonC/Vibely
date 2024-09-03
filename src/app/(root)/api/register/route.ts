@@ -1,4 +1,3 @@
-import connect from '@/database/db';
 import { auth, fireStore } from '@/firebase/config';
 import bcrypt from 'bcryptjs';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -7,7 +6,6 @@ import { NextResponse } from 'next/server';
 
 export const POST = async (req: any) => {
     const body = await req.json();
-
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, body.email, body.password);
         const user = userCredential.user;
