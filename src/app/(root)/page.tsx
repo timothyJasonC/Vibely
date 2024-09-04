@@ -1,5 +1,8 @@
 'use client'
+import BlogLayout from '@/components/blog-layout';
+import ImageLayout from '@/components/image-layout';
 import LogoutButton from '@/components/LogoutButton';
+import VideoLayout from '@/components/video-layout';
 import { getUserCredentials } from '@/database/actions/user.action';
 import Cookie from 'js-cookie';
 import Image from 'next/image';
@@ -74,6 +77,11 @@ export default function Home() {
 
       </div>
       <LogoutButton />
+
+      {/* ImageLayout, VideoLayout, dan BlogLayout akan ditampilkan berdasarkan tombol mana yang di klik oleh user. Secara default, ImageLayout adalah bagian yang akan ditampilkan. */}
+      <ImageLayout />
+      {/* <VideoLayout /> */}
+      {/* <BlogLayout /> */}
     </>
   );
 }
