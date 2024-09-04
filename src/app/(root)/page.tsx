@@ -12,7 +12,6 @@ export default function Home() {
   const authToken = Cookie.get("auth_token");
   const router = useRouter();
   const [user, setUser] = useState<any>({});
-  const [activeTab, setActiveTab] = useState("image");
 
   const getUser = async () => {
     if (authToken) {
