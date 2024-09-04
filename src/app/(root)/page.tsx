@@ -34,13 +34,6 @@ export default function Home() {
     getUser()
   }, [])
 
-  const changeImage = () => {
-    console.log('ok');
-
-  }
-  // console.log(user);
-
-
   return (
     <>
       <div className="flex flex-wrap relative">
@@ -58,9 +51,9 @@ export default function Home() {
               alt="Empty profile pict"
               width={200}
               height={200}
-              className="bg-white border-2 border-white rounded-full"
+              className="bg-white w-[139px] h-[139px] object-cover border-2 border-white rounded-full"
             />
-            <ImageProfileEdit/>
+            <ImageProfileEdit setUser={setUser}/>
           </div>
           <div className="relative ml-[200px] -bottom-[160px]">
             <p className="font-semibold text-[30px]">{user?.username ? user.username : 'Nama Anda'}</p>
@@ -83,12 +76,13 @@ export default function Home() {
         </div>
 
       </div>
-      <LogoutButton />
-
+      {/* <LogoutButton /> */}
+      <section className='absolute bottom-16 w-[537px] h-[550px] overflow-y-auto scrollbar-hide'>
+        <ImageLayout />
+        {/* <VideoLayout /> */}
+        {/* <BlogLayout /> */}
+      </section>
       {/* ImageLayout, VideoLayout, dan BlogLayout akan ditampilkan berdasarkan tombol mana yang di klik oleh user. Secara default, ImageLayout adalah bagian yang akan ditampilkan. */}
-      <ImageLayout /> 
-      {/* <VideoLayout /> */}
-      {/* <BlogLayout /> */}
     </>
   );
 }

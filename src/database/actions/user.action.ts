@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { handleError } from "@/lib/utils"
 import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { redirect } from "next/navigation";
-import { doc, setDoc, getDocs, query, where, collection, getDoc, DocumentData } from 'firebase/firestore';
+import { doc, setDoc, getDocs, query, where, collection, getDoc, DocumentData, updateDoc } from 'firebase/firestore';
 import { fireStore } from "@/firebase/config";
 
 export async function createToken(token: string, url: string) {
@@ -59,4 +59,21 @@ export const getUserCredentials = async (token: string) => {
     } catch (error) {
         return "Something went wrong please login again"
     }
+}
+
+export const UpdateImageProfile = async (token: string, newProfilePhoto: string) => {
+    const data = verify(token, process.env.KEY_JWT!) as JwtPayload;
+    if (data) {
+        const userRef = doc(fireStore, 'users', data.userId);
+        const userDoc = await getDoc(userRef);
+        if (userDoc.exists()) {
+            await updateDoc(userRef, { newProfilePhoto });
+            const updatedUserDoc = await getDoc(userRef);
+            const { profilePhoto } = updatedUserDoc.data() as DocumentData
+            return profilePhoto
+        } else {
+            throw new Error('User document not found');
+        }
+    }
+
 }
