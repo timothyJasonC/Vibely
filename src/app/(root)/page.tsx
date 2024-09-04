@@ -1,9 +1,9 @@
 'use client'
-// import BlogLayout from '@/components/blog-layout';
-// import ImageLayout from '@/components/image-layout';
+import BlogLayout from '@/components/blog-layout';
+import ImageLayout from '@/components/image-layout';
 import ImageProfileEdit from '@/components/ImageProfileEdit';
 import LogoutButton from '@/components/LogoutButton';
-// import VideoLayout from '@/components/video-layout';
+import VideoLayout from '@/components/video-layout';
 import { getUserCredentials } from '@/database/actions/user.action';
 import { UserParams } from '@/types';
 import { DocumentData } from 'firebase/firestore';
@@ -86,7 +86,7 @@ export default function Home() {
       <LogoutButton />
 
       {/* ImageLayout, VideoLayout, dan BlogLayout akan ditampilkan berdasarkan tombol mana yang di klik oleh user. Secara default, ImageLayout adalah bagian yang akan ditampilkan. */}
-      {/* <ImageLayout /> */}
+      <ImageLayout /> 
       {/* <VideoLayout /> */}
       {/* <BlogLayout /> */}
     </>
