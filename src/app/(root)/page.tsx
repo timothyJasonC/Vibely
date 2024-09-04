@@ -1,6 +1,9 @@
 'use client'
+// import BlogLayout from '@/components/blog-layout';
+// import ImageLayout from '@/components/image-layout';
 import ImageProfileEdit from '@/components/ImageProfileEdit';
 import LogoutButton from '@/components/LogoutButton';
+// import VideoLayout from '@/components/video-layout';
 import { getUserCredentials } from '@/database/actions/user.action';
 import { UserParams } from '@/types';
 import { DocumentData } from 'firebase/firestore';
@@ -58,9 +61,6 @@ export default function Home() {
               className="bg-white border-2 border-white rounded-full"
             />
             <ImageProfileEdit/>
-            {/* <button onClick={changeImage} className='absolute rounded-full inset-0 top-0 hover:opacity-100 hover:cursor-pointer opacity-0 h-[139px] w-[139px] border-white transition-opacity duration-300 flex justify-center items-center bg-gray-400 bg-opacity-50 z-20'>
-              <span className='text-white text-sm font-extrabold hover:opacity-100'>Change</span>
-            </button> */}
           </div>
           <div className="relative ml-[200px] -bottom-[160px]">
             <p className="font-semibold text-[30px]">{user?.username ? user.username : 'Nama Anda'}</p>
@@ -84,6 +84,11 @@ export default function Home() {
 
       </div>
       <LogoutButton />
+
+      {/* ImageLayout, VideoLayout, dan BlogLayout akan ditampilkan berdasarkan tombol mana yang di klik oleh user. Secara default, ImageLayout adalah bagian yang akan ditampilkan. */}
+      {/* <ImageLayout /> */}
+      {/* <VideoLayout /> */}
+      {/* <BlogLayout /> */}
     </>
   );
 }
