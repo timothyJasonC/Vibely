@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { handleError } from "@/lib/utils"
 import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { redirect } from "next/navigation";
-import { doc, setDoc, getDocs, query, where, collection, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDocs, query, where, collection, getDoc, DocumentData } from 'firebase/firestore';
 import { fireStore } from "@/firebase/config";
 
 export async function createToken(token: string, url: string) {
@@ -51,7 +51,10 @@ export const getUserCredentials = async (token: string) => {
         if (data) {
             const userRef = doc(fireStore, 'users', data.userId);
             const userDoc = await getDoc(userRef);
-            return userDoc.data()
+            if (userDoc) {
+                const { email, ...filteredData } = userDoc.data() as DocumentData
+                return filteredData
+            }
         }
     } catch (error) {
         return "Something went wrong please login again"

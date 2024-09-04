@@ -1,5 +1,4 @@
 import { auth, fireStore } from '@/firebase/config';
-import bcrypt from 'bcryptjs';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { NextResponse } from 'next/server';
