@@ -1,17 +1,25 @@
 "use client";
 import ButtonSwitchPost from "@/components/ButtonSwitchPost";
 import LogoutButton from "@/components/LogoutButton";
+import {
+  BlogComponent,
+  ImageComponent,
+  VideoComponent,
+} from "@/components/Postingan";
 import { getUserCredentials } from "@/database/actions/user.action";
 import Cookie from "js-cookie";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export default function Home() {
+export type TabType = "image" | "video" | "blog";
+
+const Home: React.FC = () => {
   const authToken = Cookie.get("auth_token");
   const router = useRouter();
   const [user, setUser] = useState<any>({});
+  const [category, setCategory] = useState<TabType>("image");
 
   const getUser = async () => {
     if (authToken) {
@@ -82,7 +90,12 @@ export default function Home() {
           ada ini dan jangan lupa gunakan pembatas huruf ya
         </p>
       </section>
-      <ButtonSwitchPost />
+      <ButtonSwitchPost category={category} setCategory={setCategory} />
+      {category === "image" && <ImageComponent />}
+      {category === "video" && <VideoComponent />}
+      {category === "blog" && <BlogComponent />}
     </>
   );
-}
+};
+
+export default Home;

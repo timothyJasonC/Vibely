@@ -1,39 +1,57 @@
-import React, { useState } from "react";
+import { TabType } from "@/app/(root)/page";
+import React from "react";
 
-import ImageLayout from "../../public/img/button/LayoutImage";
-import LayoutVideo from "../../public/img/button/LayoutVIdeo";
-import LayoutBlog from "../../public/img/button/LayoutBlog";
+interface Props {
+  category: TabType;
+  setCategory: React.Dispatch<React.SetStateAction<TabType>>;
+}
 
-import { BlogComponent, ImageComponent, VideoComponent } from "./Postingan";
+const ButtonSwitchPost: React.FC<Props> = ({ setCategory, category }) => {
+  let categoryPost = category;
 
-type TabType = "image" | "video" | "blog";
+  function handleActive(e: React.MouseEvent<HTMLElement>) {
+    let clickCategory = e.currentTarget;
 
-const ButtonSwitchPost: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabType>("image");
+    const title = clickCategory.getAttribute("title");
 
-  const iconMap = {
-    image: ImageLayout,
-    video: LayoutVideo,
-    blog: LayoutBlog,
-  };
-
-  const handleClick = () => {
-    setActiveTab((prevTab) => (prevTab === "image" ? "video" : "image"));
-  };
+    if (title && (title === "image" || title === "video" || title === "blog")) {
+      setCategory(title as TabType);
+    }
+  }
 
   return (
-    <div className="flex flex-col absolute cursor-pointer m-auto items-center">
-      <div
-        className={`cursor-pointer transition-transform duration-200 ease-in-out transform ${
-          activeTab === "image" ? "scale-110" : "scale-100"
-        }`}
-        onClick={handleClick} //  panggil handleClick
-        dangerouslySetInnerHTML={{ __html: iconMap[activeTab] }} //  Dinamis
-      />
-      {activeTab === "image" && <ImageComponent />}
-      {activeTab === "video" && <VideoComponent />}
-      {activeTab === "video" && <BlogComponent />}
-    </div>
+    <>
+      <div className="flex flex-row bg-[#E0F4FF] m-auto relative top-[350px] w-2/3 mx-auto rounded-full gap-3">
+        <img
+          src="/img/button/LayoutImage.svg"
+          alt="Image Post"
+          className={`cursor-pointer py-2 ${
+            categoryPost === "image" ? "hover-category-active" : "px-7"
+          }`}
+          title="image"
+          onClick={handleActive}
+        />
+        <img
+          src="/img/button/LayoutVideo.svg"
+          alt="Video Post"
+          className={`cursor-pointer py-2 ${
+            categoryPost === "video" ? "hover-category-active" : "px-7"
+          }`}
+          title="video"
+          onClick={handleActive}
+        />
+        <img
+          src="/img/button/LayoutBlog.svg"
+          alt="Blog Post"
+          className={`cursor-pointer py-2 ${
+            categoryPost === "blog" ? "hover-category-active" : "px-7"
+          }`}
+          title="blog"
+          onClick={handleActive}
+        />
+      </div>
+      <div className=""></div>
+    </>
   );
 };
 

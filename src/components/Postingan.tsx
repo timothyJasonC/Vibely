@@ -24,7 +24,7 @@ export const VideoComponent = () => {
   }, []);
 
   return (
-    <div className="absolute w-[200px] h-[200px] flex  -bottom-[300px] my-24 ml-[170px]  right-[120px]">
+    <div className="absolute w-[200px]  h-[200px] flex bottom-[400px] my-24 ml-[170px]  right-[120px]">
       <video ref={videoRef} controls>
         <source src="/video/freya.mp4" type="video/mp4" />
         your browser not support the video tag
