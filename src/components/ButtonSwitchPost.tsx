@@ -1,4 +1,4 @@
-import { TabType } from "@/app/(root)/page";
+import { TabType } from "@/types";
 import React from "react";
 
 interface Props {
