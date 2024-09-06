@@ -5,3 +5,5 @@ export type UserParams = {
     title: string,
     createdAt: string
 }
+
+export type TabType = "image" | "video" | "blog";

@@ -76,3 +76,8 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+@layer components {
+  .hover-category-active {
+    @apply px-10 rounded-full bg-white border-4 border-crims shadow-md;
+  }
+}

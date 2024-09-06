@@ -1,11 +1,18 @@
-'use client'
+
+"use client";
+import ButtonSwitchPost from "@/components/ButtonSwitchPost";
+import LogoutButton from "@/components/LogoutButton";
+import {
+  BlogComponent,
+  ImageComponent,
+  VideoComponent,
+} from "@/components/Postingan";
 import BlogLayout from '@/components/blog-layout';
 import ImageLayout from '@/components/image-layout';
 import ImageProfileEdit from '@/components/ImageProfileEdit';
-import LogoutButton from '@/components/LogoutButton';
 import VideoLayout from '@/components/video-layout';
 import { getUserCredentials } from '@/database/actions/user.action';
-import { UserParams } from '@/types';
+import { TabType, UserParams } from '@/types';
 import { DocumentData } from 'firebase/firestore';
 import Cookie from 'js-cookie';
 import Image from 'next/image';
@@ -13,10 +20,14 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
+
+
 export default function Home() {
   const authToken = Cookie.get('auth_token');
   const router = useRouter()
   const [user, setUser] = useState<UserParams | DocumentData>()
+  const [category, setCategory] = useState<TabType>("image");
+
 
   const getUser = async () => {
     if (authToken) {
@@ -30,12 +41,19 @@ export default function Home() {
     }
   }
 
+  //ini main
   useEffect(() => {
-    getUser()
-  }, [])
+    getUser();
+  }, []);
+
+  const changeImage = () => {
+    console.log('ok');
+
+  }
 
   return (
     <>
+      <LogoutButton />
       <div className="flex flex-wrap relative">
         <div className="Cover ">
           <Image
@@ -53,7 +71,7 @@ export default function Home() {
               height={200}
               className="bg-white w-[139px] h-[139px] object-cover border-2 border-white rounded-full"
             />
-            <ImageProfileEdit setUser={setUser}/>
+            <ImageProfileEdit setUser={setUser} />
           </div>
           <div className="relative ml-[200px] -bottom-[160px]">
             <p className="font-semibold text-[30px]">{user?.username ? user.username : 'Nama Anda'}</p>
@@ -61,20 +79,21 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="flex items-center relative gap-16 bg-[#E0F4FF] -bottom-[200px] px-10 rounded-lg w-[370px] m-auto">
-        <div className="text-center">
-          <p className="text-black font-bold text-2xl">205</p>
-          <p className="text-gray-600">Image</p>
+      <div className="total-post flex items-center relative gap-16 bg-[#E0F4FF] m-auto -bottom-[195px] px-10 rounded-[25px] w-[444px]  py-[3px]">
+        <div className="flex gap-16 m-auto">
+          <div className="text-center">
+            <p className="text-black font-bold text-2xl">205</p>
+            <p className="text-gray-600">Image</p>
+          </div>
+          <div className="text-center">
+            <p className="text-black font-bold text-2xl">205</p>
+            <p className="text-gray-600">Video</p>
+          </div>
+          <div className="text-center">
+            <p className="text-black font-bold text-2xl">205</p>
+            <p className="text-gray-600">Blog</p>
+          </div>
         </div>
-        <div className="text-center">
-          <p className="text-black font-bold text-2xl">205</p>
-          <p className="text-gray-600">Video</p>
-        </div>
-        <div className="text-center">
-          <p className="text-black font-bold text-2xl">205</p>
-          <p className="text-gray-600">Blog</p>
-        </div>
-
       </div>
       {/* <LogoutButton /> */}
       <section className='absolute bottom-16 w-[537px] h-[550px] overflow-y-auto scrollbar-hide'>
@@ -82,7 +101,25 @@ export default function Home() {
         {/* <VideoLayout /> */}
         {/* <BlogLayout /> */}
       </section>
+
+
+      <section className="description absolute flex bottom-[529px] w-[444px] px-9 py-[19.5px] rounded-[25px] ml-11 bg-[#E0F4FF] leading-[22.5px] text-[15px] tracking-[5%]">
+        <p className="flex text-center">
+          Deskripsi akun akan ada diisni dan akan panjang tetapi tetap di dalam
+          kotak ini agar membatasi dan kotaknya tidak akan terlihat saat sudah
+          ada ini dan jangan lupa gunakan pembatas huruf ya
+        </p>
+      </section>
+      <ButtonSwitchPost category={category} setCategory={setCategory} />
+      {category === "image" && <ImageComponent />}
+      {category === "video" && <VideoComponent />}
+      {category === "blog" && <BlogComponent />}
+      <LogoutButton />
+
       {/* ImageLayout, VideoLayout, dan BlogLayout akan ditampilkan berdasarkan tombol mana yang di klik oleh user. Secara default, ImageLayout adalah bagian yang akan ditampilkan. */}
+      <ImageLayout />
+      {/* <VideoLayout /> */}
+      {/* <BlogLayout /> */}
     </>
   );
-}
+};
