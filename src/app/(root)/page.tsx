@@ -2,11 +2,6 @@
 "use client";
 import ButtonSwitchPost from "@/components/ButtonSwitchPost";
 import LogoutButton from "@/components/LogoutButton";
-import {
-  BlogComponent,
-  ImageComponent,
-  VideoComponent,
-} from "@/components/Postingan";
 import BlogLayout from '@/components/blog-layout';
 import ImageLayout from '@/components/image-layout';
 import ImageProfileEdit from '@/components/ImageProfileEdit';
@@ -19,8 +14,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-
-
 
 export default function Home() {
   const authToken = Cookie.get('auth_token');
@@ -95,13 +88,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* <LogoutButton /> */}
-      <section className='absolute bottom-16 w-[537px] h-[550px] overflow-y-auto scrollbar-hide'>
-        <ImageLayout />
-        {/* <VideoLayout /> */}
-        {/* <BlogLayout /> */}
-      </section>
-
 
       <section className="description absolute flex bottom-[529px] w-[444px] px-9 py-[19.5px] rounded-[25px] ml-11 bg-[#E0F4FF] leading-[22.5px] text-[15px] tracking-[5%]">
         <p className="flex text-center">
@@ -110,16 +96,17 @@ export default function Home() {
           ada ini dan jangan lupa gunakan pembatas huruf ya
         </p>
       </section>
-      <ButtonSwitchPost category={category} setCategory={setCategory} />
-      {category === "image" && <ImageComponent />}
-      {category === "video" && <VideoComponent />}
-      {category === "blog" && <BlogComponent />}
-      <LogoutButton />
 
-      {/* ImageLayout, VideoLayout, dan BlogLayout akan ditampilkan berdasarkan tombol mana yang di klik oleh user. Secara default, ImageLayout adalah bagian yang akan ditampilkan. */}
-      <ImageLayout />
-      {/* <VideoLayout /> */}
-      {/* <BlogLayout /> */}
+      <ButtonSwitchPost category={category} setCategory={setCategory} />
+      
+      <section className='absolute bottom-16 w-[537px] h-[400px] overflow-y-auto scrollbar-hide'>
+        {category === "image" && <ImageLayout />}
+        {category === "video" && <VideoLayout />}
+        {category === "blog" && <BlogLayout />}
+      </section>
+
+
+     
     </>
   );
 };
