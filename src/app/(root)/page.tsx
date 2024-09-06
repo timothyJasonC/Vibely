@@ -1,4 +1,3 @@
-
 "use client";
 import ButtonSwitchPost from "@/components/ButtonSwitchPost";
 import LogoutButton from "@/components/LogoutButton";
