@@ -1,4 +1,7 @@
-export type CredentialsUserParams = {
+export type UserParams = {
     email: string,
-    password: string
+    profilePhoto: string,
+    username: string,
+    title: string,
+    createdAt: string
 }

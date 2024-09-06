@@ -38,7 +38,7 @@ function UserForm({ type }: UserFormProps) {
                     body: JSON.stringify(values)
                 })
                 const result = await res.json()
-                if (result.message == 'User is registered') {
+                if (result.message == 'User is registered and data saved to Firestore') {
                     toast.success(result.message)
                     router.push('/login')
                 } else {
@@ -51,17 +51,17 @@ function UserForm({ type }: UserFormProps) {
 
         if (type === 'Login') {
             try {
-                await signInWithEmailAndPassword(auth, values.email, values.password);
-                const token = await credentialsLogin(values.email, 'email')
-                console.log(`token: ${token}`);
-
+                const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+                const uid = userCredential.user.uid;
+                const token = await credentialsLogin(uid)
+                console.log(token);
                 toast.success("Login successful");
                 setTimeout(() => {
                     toast.success("Redirecting to Dashboard")
-                    createToken(token, '/')
-                }, 1500);
-            } catch (error) {
-                toast.error('Email Or Password Wrong')
+                    createToken(token!, '/')
+                }, 1500)
+            } catch (error: any) {
+                toast.error(error.message)
             }
         }
     }
@@ -72,14 +72,12 @@ function UserForm({ type }: UserFormProps) {
             const result = await signInWithPopup(auth, provider)
             const user = result.user;
             if (user) {
-                await googleLogin(user.email!, user.photoURL!, user.displayName!)
-
-                const token = await credentialsLogin(user.email!, 'google')
-
+                const userId = await googleLogin(user.email!, user.photoURL!, user.displayName!, user.uid!)
+                const token = await credentialsLogin(userId!)
                 toast.success("Login successful");
                 setTimeout(() => {
                     toast.success("Redirecting to Dashboard")
-                    createToken(token, '/')
+                    createToken(token!, '/')
                 }, 1500);
             }
         } catch (error) {

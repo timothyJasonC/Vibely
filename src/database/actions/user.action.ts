@@ -1,42 +1,45 @@
 "use server"
 import { cookies } from "next/headers";
-import connect from "../db"
-import User from "../models/user.model"
 import { handleError } from "@/lib/utils"
 import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { redirect } from "next/navigation";
+import { doc, setDoc, getDocs, query, where, collection, getDoc, DocumentData } from 'firebase/firestore';
+import { fireStore } from "@/firebase/config";
 
 export async function createToken(token: string, url: string) {
     cookies().set('auth_token', token)
     redirect(url)
 }
 
-export const googleLogin = async (email: string, profilePhoto: string, username: string) => {
+export const googleLogin = async (email: string, profilePhoto: string, username: string, uid: string) => {
     try {
-        await connect();
-        const existingUser = await User.findOne({ email, provider: 'google' })
+        const userRef = doc(fireStore, 'users', uid);
 
-        if (existingUser) {
-            return
-        } else {
-            const newUser = new User({
-                email,
-                provider: 'google',
-                profilePhoto, username
-            })
-            await newUser.save()
-            return
+        const userDoc = await getDocs(query(collection(fireStore, 'users'), where('email', '==', email)));
+
+        if (!userDoc.empty) {
+            console.log("User already exists, skipping creation.");
+            const existingUserUid = userDoc.docs[0].id;
+            return existingUserUid;
         }
+
+        await setDoc(userRef, {
+            email,
+            profilePhoto,
+            username,
+            createdAt: new Date().toISOString(),
+        });
+        console.log("User created successfully.");
+        return uid
     } catch (error) {
         console.error("Error creating Google user:", error);
         handleError(error);
     }
 }
 
-export const credentialsLogin = async (email: string, provider: string) => {
-    const user = await User.findOne({ email, provider })
+export const credentialsLogin = async (userId: string) => {
     const payload = {
-        id: user.id,
+        userId
     }
     const token = sign(payload, process.env.KEY_JWT!, {})
     return token
@@ -45,9 +48,13 @@ export const credentialsLogin = async (email: string, provider: string) => {
 export const getUserCredentials = async (token: string) => {
     try {
         const data = verify(token, process.env.KEY_JWT!) as JwtPayload;
-        if (data.id) {
-            const user = await User.findById(data.id);
-            return {user}
+        if (data) {
+            const userRef = doc(fireStore, 'users', data.userId);
+            const userDoc = await getDoc(userRef);
+            if (userDoc) {
+                const { email, ...filteredData } = userDoc.data() as DocumentData
+                return filteredData
+            }
         }
     } catch (error) {
         return "Something went wrong please login again"
