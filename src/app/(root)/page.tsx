@@ -21,7 +21,6 @@ export default function Home() {
   const [user, setUser] = useState<UserParams | DocumentData>()
   const [category, setCategory] = useState<TabType>("image");
 
-
   const getUser = async () => {
     if (authToken) {
       const userData = await getUserCredentials(authToken!)
@@ -38,11 +37,6 @@ export default function Home() {
   useEffect(() => {
     getUser();
   }, []);
-
-  const changeImage = () => {
-    console.log('ok');
-
-  }
 
   return (
     <>

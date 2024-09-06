@@ -67,7 +67,7 @@ export const UpdateImageProfile = async (token: string, newProfilePhoto: string)
         const userRef = doc(fireStore, 'users', data.userId);
         const userDoc = await getDoc(userRef);
         if (userDoc.exists()) {
-            await updateDoc(userRef, { newProfilePhoto });
+            await updateDoc(userRef, { profilePhoto: newProfilePhoto });
             const updatedUserDoc = await getDoc(userRef);
             const { profilePhoto } = updatedUserDoc.data() as DocumentData
             return profilePhoto
