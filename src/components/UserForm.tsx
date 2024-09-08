@@ -8,7 +8,6 @@ import { userDefaultValues } from '@/constants'
 import { auth } from "@/firebase/config";
 import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth"
 import { createToken, credentialsLogin, googleLogin } from "@/database/actions/user.action"
-// import { toast } from "sonner"
 import { toast } from "sonner"
 
 import { useRouter } from "next/navigation"

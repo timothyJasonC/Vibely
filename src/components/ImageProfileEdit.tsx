@@ -2,7 +2,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useState } from "react";
 import Image from "next/image";
 import Cookie from 'js-cookie';
-import uploadImage from "@/firebase/uploaderImage";
+import {uploadImage} from "@/firebase/uploaderImage";
 import { UpdateImageProfile } from "@/database/actions/user.action";
 import { UserParams } from "@/types";
 import { DocumentData } from "firebase/firestore";
@@ -42,7 +42,7 @@ export default function ImageProfileEdit({ setUser }: ImageProfileEditProps) {
 
         if (previewImage) {
             try {
-                const url = await uploadImage(previewImage);
+                const url = await uploadImage(previewImage, 'profile-images');
                 await UpdateImageProfile(authToken, url);
                 setUser((prevUser: any) => ({
                     ...prevUser,

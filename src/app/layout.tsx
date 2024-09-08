@@ -23,7 +23,7 @@ export default async function RootLayout({
       <body className={poppins.className}>
 
         <main className="bg-primary-50 w-full h-full  p-12 relative  items-center flex">
-          <section className=" w-[537px] mx-auto  border-2 border-main h-[955px] rounded-3xl bg-white overflow-hidden">
+          <section className=" w-[537px] mx-auto  border-4 border-main h-[955px] rounded-[40px] bg-white overflow-hidden">
             {children}
           </section>
         </main>
