@@ -25,10 +25,7 @@ const LogoutButton = () => {
   };
 
   return (
-    <Button
-      onClick={handleLogout}
-      className="absolute bg-red-500 bottom-[780px] m-auto ml-[450px] text-white font-bold rounded-md"
-    >
+    <Button onClick={handleLogout} className="absolute bg-red-500">
       Logout
     </Button>
   );
