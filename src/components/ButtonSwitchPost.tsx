@@ -1,4 +1,5 @@
 import { TabType } from "@/types";
+import Image from "next/image";
 import React from "react";
 
 interface Props {
@@ -31,11 +32,12 @@ const ButtonSwitchPost: React.FC<Props> = ({ setCategory, category }) => {
           title="image"
           onClick={handleActive}
         />
-        <img
-          src="/img/button/LayoutVideo.svg"
+        <Image
+          src="/img/button/LayoutVideo.png"
           alt="Video Post"
+          width={100} height={60}
           className={`cursor-pointer py-2 ${
-            categoryPost === "video" ? "hover-category-active" : "px-7"
+            categoryPost === "video" ? "hover-category-active w-32" : "px-7"
           }`}
           title="video"
           onClick={handleActive}

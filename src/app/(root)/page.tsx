@@ -13,29 +13,42 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import AddPostButton from "@/components/AddPostButton";
+import { getPostCountsByUser, getPostsByUser } from "@/database/actions/post.action";
 
 export default function Home() {
-  const authToken = Cookie.get('auth_token');
   const router = useRouter()
-  const [user, setUser] = useState<UserParams | DocumentData>()
   const [category, setCategory] = useState<TabType>("image");
+  const authToken = Cookie.get('auth_token');
+  const [user, setUser] = useState<UserParams | DocumentData>()
+  const [posts, setPosts] = useState<DocumentData[] | string>([]);
+  const [postCounts, setPostCounts] = useState<Record<string, number>>({ image: 0, video: 0, blog: 0 });
 
   const getUser = async () => {
     if (authToken) {
-      const userData = await getUserCredentials(authToken!)
+      const userData = await getUserCredentials(authToken!);
       if (userData === "Something went wrong please login again") {
-        toast.error(userData)
-        router.push('/login')
+        toast.error(userData);
+        router.push('/login');
       } else {
-        setUser(userData)
+        setUser(userData);
+
+        const counts = await getPostCountsByUser(authToken!);
+        if (typeof counts === 'object') {
+          setPostCounts(counts);
+        } else {
+          toast.error(counts); 
+        }
+
+        const postsData = await getPostsByUser(authToken!, category);
+        setPosts(postsData);
       }
     }
   }
 
-  //ini main
   useEffect(() => {
     getUser();
-  }, []);
+  }, [category]);
 
   return (
     <>
@@ -68,15 +81,15 @@ export default function Home() {
       <div className="total-post flex items-center relative gap-16 bg-[#E0F4FF] m-auto -bottom-[195px] px-10 rounded-[25px] w-[444px]  py-[3px]">
         <div className="flex gap-16 m-auto">
           <div className="text-center">
-            <p className="text-black font-bold text-2xl">205</p>
+            <p className="text-black font-bold text-2xl">{postCounts.image}</p>
             <p className="text-gray-600">Image</p>
           </div>
           <div className="text-center">
-            <p className="text-black font-bold text-2xl">205</p>
+            <p className="text-black font-bold text-2xl">{postCounts.video}</p>
             <p className="text-gray-600">Video</p>
           </div>
           <div className="text-center">
-            <p className="text-black font-bold text-2xl">205</p>
+            <p className="text-black font-bold text-2xl">{postCounts.blog}</p>
             <p className="text-gray-600">Blog</p>
           </div>
         </div>
@@ -91,15 +104,15 @@ export default function Home() {
       </section>
 
       <ButtonSwitchPost category={category} setCategory={setCategory} />
-      
+
       <section className='absolute bottom-16 w-[537px] h-[400px] overflow-y-auto scrollbar-hide'>
-        {category === "image" && <ImageLayout />}
-        {category === "video" && <VideoLayout />}
-        {category === "blog" && <BlogLayout />}
+        {category === "image" && <ImageLayout  posts={posts}/>}
+        {category === "video" && <VideoLayout posts={posts}/>}
+        {category === "blog" && <BlogLayout posts={posts}/>}
       </section>
 
+      <AddPostButton />
 
-     
     </>
   );
 };
