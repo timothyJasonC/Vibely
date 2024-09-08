@@ -35,10 +35,10 @@ export default function Home() {
   const [postCounts, setPostCounts] = useState<Record<string, number>>({ image: 0, video: 0, blog: 0 });
   const [animationSetting, setAnimationSetting] = useState<Boolean>(false);
 
-
   const getUser = async () => {
     if (authToken) {
       const userData = await getUserCredentials(authToken!);
+      
       if (userData === "Something went wrong please login again") {
         toast.error(userData);
         router.push('/login');
@@ -54,7 +54,6 @@ export default function Home() {
 
         const postsData = await getPostsByUser(authToken!, category);
         setPosts(postsData);
-        router.push("/login");
       }
     }
   };
@@ -63,14 +62,6 @@ export default function Home() {
     getUser();
   }, [category]);
 
-
-  const changeImage = () => {
-    console.log("ok");
-  };
-  useEffect(() => {
-    // Memastikan bahwa GIF hanya dimuat ulang ketika animationSetting berubah
-    console.log("Animation setting updated:", animationSetting);
-  }, [animationSetting]);
   return (
     <>
       <DropdownMenu>
