@@ -13,7 +13,7 @@ interface PageProps {
     }
 }
 
-export default function page({ params: { id } }: PageProps) {
+export default function PostPage({ params: { id } }: PageProps) {
     const [post, setPost] = useState<DocumentData | null>(null)
     const [notFound, setNotFound] = useState<boolean>(false);
 

@@ -11,7 +11,7 @@ import ImageProfileEdit from '@/components/ImageProfileEdit';
 import CreateIcon from '@/components/CreateIcon';
 
 
-export default function page() {
+export default function Page() {
   const router = useRouter()
   const authToken = Cookie.get('auth_token');
   const [user, setUser] = useState<UserParams | DocumentData>()
