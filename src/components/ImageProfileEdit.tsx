@@ -1,17 +1,16 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, } from "@/components/ui/alert-dialog"
 import { useState } from "react";
 import Image from "next/image";
-import Cookie from 'js-cookie';
-import {uploadImage} from "@/firebase/uploaderImage";
+import { uploadImage } from "@/firebase/uploaderImage";
 import { UpdateImageProfile } from "@/database/actions/user.action";
 import { UserParams } from "@/types";
 import { DocumentData } from "firebase/firestore";
 import { toast } from "sonner"
+import { auth } from "@/firebase/config";
 
 interface ImageProfileEditProps {
     setUser: React.Dispatch<React.SetStateAction<UserParams | DocumentData | undefined>>;
 }
-
 
 export default function ImageProfileEdit({ setUser }: ImageProfileEditProps) {
 
@@ -34,21 +33,18 @@ export default function ImageProfileEdit({ setUser }: ImageProfileEditProps) {
     }
 
     async function handleSaveImage() {
-        const authToken = Cookie.get('auth_token');
-        if (!authToken) {
-            console.error('Auth token not found');
-            return;
-        }
-
         if (previewImage) {
             try {
-                const url = await uploadImage(previewImage, 'profile-images');
-                await UpdateImageProfile(authToken, url);
-                setUser((prevUser: any) => ({
-                    ...prevUser,
-                    profilePhoto: url,
-                }));
-                toast.success('Update Profile Image Success')
+                const unsubscribe = auth.onAuthStateChanged(async (user: any) => {
+                    const url = await uploadImage(previewImage, 'profile-images');
+                    await UpdateImageProfile(user.uid, url);
+                    setUser((prevUser: any) => ({
+                        ...prevUser,
+                        profilePhoto: url,
+                    }));
+                    toast.success('Update Profile Image Success')
+                    return () => unsubscribe()
+                })
             } catch (error: any) {
                 toast.error(error.message)
             }

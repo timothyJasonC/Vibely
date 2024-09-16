@@ -1,6 +1,5 @@
 'use client'
 import Image from 'next/image'
-import Cookie from 'js-cookie';
 import { UserParams } from '@/types';
 import { DocumentData } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
@@ -9,28 +8,34 @@ import { useRouter } from 'next/navigation';
 import { getUserCredentials } from '@/database/actions/user.action';
 import ImageProfileEdit from '@/components/ImageProfileEdit';
 import CreateIcon from '@/components/CreateIcon';
+import { auth } from '@/firebase/config';
 
 
 export default function Page() {
   const router = useRouter()
-  const authToken = Cookie.get('auth_token');
   const [user, setUser] = useState<UserParams | DocumentData>()
 
   const getUser = async () => {
-    if (authToken) {
-      const userData = await getUserCredentials(authToken!)
-      if (userData === "Something went wrong please login again") {
-        toast.error(userData)
-        router.push('/login')
+    const unsubscribe = auth.onAuthStateChanged(async (user: any) => {
+      if (user.uid) {
+        try {
+          const userData = await getUserCredentials(user.uid);
+          setUser(userData);
+        } catch (error) {
+          toast.error("Failed to fetch user data or posts.");
+        }
       } else {
-        setUser(userData)
+        setUser(undefined)
+        router.push('/login')
       }
-    }
+      return () => unsubscribe()
+    })
   }
 
   useEffect(() => {
     getUser();
   }, []);
+
   return (
     <div className='w-full h-[955px] relative'>
 
@@ -61,7 +66,7 @@ export default function Page() {
       </div>
 
       <section className='absolute rounded-2xl flex flex-col bottom-12 mx-auto right-2 left-2 pt-6 items-center w-[444px] h-[650px] bg-primary-50'>
-          <CreateIcon/>
+        <CreateIcon />
       </section>
     </div>
   )

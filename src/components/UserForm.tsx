@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { userDefaultValues } from '@/constants'
 import { auth } from "@/firebase/config";
 import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth"
-import { createToken, credentialsLogin, googleLogin } from "@/database/actions/user.action"
+import { googleLogin } from "@/database/actions/user.action"
 import { toast } from "sonner"
 
 import { useRouter } from "next/navigation"
@@ -51,14 +51,11 @@ function UserForm({ type }: UserFormProps) {
 
         if (type === 'Login') {
             try {
-                const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
-                const uid = userCredential.user.uid;
-                const token = await credentialsLogin(uid)
-                console.log(token);
+                await signInWithEmailAndPassword(auth, values.email, values.password)
                 toast.success("Login successful");
                 setTimeout(() => {
                     toast.success("Redirecting to Dashboard")
-                    createToken(token!, '/')
+                    router.push('/')
                 }, 1500)
             } catch (error: any) {
                 toast.error(error.message)
@@ -72,12 +69,11 @@ function UserForm({ type }: UserFormProps) {
             const result = await signInWithPopup(auth, provider)
             const user = result.user;
             if (user) {
-                const userId = await googleLogin(user.email!, user.photoURL!, user.displayName!, user.uid!)
-                const token = await credentialsLogin(userId!)
+                await googleLogin(user.email!, user.photoURL!, user.displayName!, user.uid!)
                 toast.success("Login successful");
                 setTimeout(() => {
                     toast.success("Redirecting to Dashboard")
-                    createToken(token!, '/')
+                    router.push('/')
                 }, 1500);
             }
         } catch (error) {

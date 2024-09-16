@@ -3,11 +3,8 @@ import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { doc, setDoc, getDocs, query, where, collection, getDoc, DocumentData, updateDoc, serverTimestamp, addDoc } from 'firebase/firestore';
 import { fireStore } from "@/firebase/config";
 
-export const createPost = async (title: string, contentLink: string, contentText: string, postType: string, token: string) => {
+export const createPost = async (title: string, contentLink: string, contentText: string, postType: string, userId: string) => {
     try {
-        const data = verify(token, process.env.KEY_JWT!) as JwtPayload;
-        const userId = data.userId
-
         const postRef = collection(fireStore, 'posts')
         let newPost = {}
         if (postType === 'blog') {
@@ -38,14 +35,14 @@ export const createPost = async (title: string, contentLink: string, contentText
     }
 }
 
-export const getPostCountsByUser = async (token: string) => {
+export const getPostCountsByUser = async (userId: string) => {
     const types = ['image', 'video', 'blog'];
     const counts: Record<string, number> = {};
 
     try {
         for (const type of types) {
-            const posts = await getPostsByUser(token, type);
-            counts[type] = posts.length;
+            const posts = await getPostsByUser(userId, type);
+            counts[type] = posts!.length;
         }
         return counts;
     } catch (error) {
@@ -54,11 +51,8 @@ export const getPostCountsByUser = async (token: string) => {
     }
 }
 
-export const getPostsByUser = async (token: string, postType?: string) => {
+export const getPostsByUser = async (userId: string, postType?: string) => {
     try {
-        const data = verify(token, process.env.KEY_JWT!) as JwtPayload;
-        const userId = data.userId;
-
         const postRef = collection(fireStore, 'posts');
 
         let q;
@@ -69,7 +63,7 @@ export const getPostsByUser = async (token: string, postType?: string) => {
         }
 
         const querySnapshot = await getDocs(q);
-        
+
         const posts: DocumentData[] = [];
         querySnapshot.forEach((doc) => {
             posts.push({ id: doc.id, ...doc.data(), createdAt: doc.data().createdAt.toMillis() });
@@ -77,29 +71,28 @@ export const getPostsByUser = async (token: string, postType?: string) => {
 
         return posts;
     } catch (error) {
-        console.error("Error fetching posts:", error);
-        return "Something went wrong, please try again";
+        return
     }
 }
 
 export const getPostById = async (postId: string) => {
     try {
-      const postRef = doc(fireStore, 'posts', postId);
-      const postSnap = await getDoc(postRef);
-  
-      if (postSnap.exists()) {
-        const postData = postSnap.data();
-  
-        return {
-          id: postSnap.id,
-          ...postData,
-          createdAt: postData.createdAt.toMillis(),
-        };
-      } else {
-        return "Post not found";
-      }
+        const postRef = doc(fireStore, 'posts', postId);
+        const postSnap = await getDoc(postRef);
+
+        if (postSnap.exists()) {
+            const postData = postSnap.data();
+
+            return {
+                id: postSnap.id,
+                ...postData,
+                createdAt: postData.createdAt.toMillis(),
+            };
+        } else {
+            return "Post not found";
+        }
     } catch (error) {
-      console.error("Error fetching post:", error);
-      return "Something went wrong, please try again";
+        console.error("Error fetching post:", error);
+        return "Something went wrong, please try again";
     }
-  };
+};

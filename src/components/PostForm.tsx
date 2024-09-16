@@ -2,16 +2,16 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import React, { useEffect, useState } from "react";
+import {useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { AlertDialogAction, AlertDialogCancel, AlertDialogFooter } from "@/components/ui/alert-dialog"; // Import komponen AlertDialog
 import PostContent from "./PostContent";
 import { Textarea } from "@/components/ui/textarea"
 import { createPost } from "@/database/actions/post.action";
-import Cookie from 'js-cookie';
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { auth } from "@/firebase/config";
 
 const formSchema = (postType: string) =>
     z.object({
@@ -34,7 +34,6 @@ export default function PostForm({
     closeDialog: () => void;
     postType: string;
 }) {
-    const authToken = Cookie.get('auth_token');
     const [loading, setLoading] = useState(false)
     const router = useRouter()
     const form = useForm<z.infer<ReturnType<typeof formSchema>>>({
@@ -48,12 +47,16 @@ export default function PostForm({
     });
 
     async function onSubmit(values: z.infer<ReturnType<typeof formSchema>>) {
-        await createPost(values.title, values.contentLink, values.contentText, postType, authToken!)
-        toast.success('Post created successfully')
-        router.push('/')
-        closeDialog();
+        const unsubscribe = auth.onAuthStateChanged(async (user: any) => {
+            await createPost(values.title, values.contentLink, values.contentText, postType, user.uid)
+            toast.success('Post created successfully')
+            router.push('/')
+            closeDialog();
+        })
+        return () => unsubscribe()
+
     }
-    
+
     return (
         <Form {...form}>
             <form

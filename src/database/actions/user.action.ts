@@ -1,15 +1,8 @@
-"use server"
-import { cookies } from "next/headers";
+// "use server"
 import { handleError } from "@/lib/utils"
-import { redirect } from "next/navigation";
-import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { doc, setDoc, getDocs, query, where, collection, getDoc, DocumentData, updateDoc } from 'firebase/firestore';
-import { fireStore } from "@/firebase/config";
-
-export async function createToken(token: string, url: string) {
-    cookies().set('auth_token', token)
-    redirect(url)
-}
+import { auth, fireStore } from "@/firebase/config";
+import { updateEmail } from "firebase/auth";
 
 export const googleLogin = async (email: string, profilePhoto: string, username: string, uid: string) => {
     try {
@@ -37,43 +30,39 @@ export const googleLogin = async (email: string, profilePhoto: string, username:
     }
 }
 
-export const credentialsLogin = async (userId: string) => {
-    const payload = {
-        userId
-    }
-    const token = sign(payload, process.env.KEY_JWT!, {})
-    return token
-}
-
-export const getUserCredentials = async (token: string) => {
+export const getUserCredentials = async (userId: string) => {
     try {
-        const data = verify(token, process.env.KEY_JWT!) as JwtPayload;
-        if (data) {
-            const userRef = doc(fireStore, 'users', data.userId);
-            const userDoc = await getDoc(userRef);
-            if (userDoc) {
-                const { email, ...filteredData } = userDoc.data() as DocumentData
-                return filteredData
-            }
+        const userRef = doc(fireStore, 'users', userId);
+        const userDoc = await getDoc(userRef);
+        if (userDoc) {
+            return userDoc.data()
         }
     } catch (error) {
-        return "Something went wrong please login again"
+        return
     }
 }
 
-export const UpdateImageProfile = async (token: string, newProfilePhoto: string) => {
-    const data = verify(token, process.env.KEY_JWT!) as JwtPayload;
-    if (data) {
-        const userRef = doc(fireStore, 'users', data.userId);
-        const userDoc = await getDoc(userRef);
-        if (userDoc.exists()) {
-            await updateDoc(userRef, { profilePhoto: newProfilePhoto });
-            const updatedUserDoc = await getDoc(userRef);
-            const { profilePhoto } = updatedUserDoc.data() as DocumentData
-            return profilePhoto
-        } else {
-            throw new Error('User document not found');
-        }
+export const UpdateImageProfile = async (userId: string, newProfilePhoto: string) => {
+    const userRef = doc(fireStore, 'users', userId);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+        await updateDoc(userRef, { profilePhoto: newProfilePhoto });
+        const updatedUserDoc = await getDoc(userRef);
+        const { profilePhoto } = updatedUserDoc.data() as DocumentData
+        return profilePhoto
+    } else {
+        throw new Error('User document not found');
     }
+}
 
+export const UpdateProfile = async (userId: string, username: string, title: string, description: string, email: string | undefined) => {
+    const userRef = doc(fireStore, 'users', userId);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+        await updateDoc(userRef, { username, title, description, email });
+        const updatedUserDoc = await getDoc(userRef);
+        return updatedUserDoc
+    } else {
+        throw new Error('User document not found');
+    }
 }

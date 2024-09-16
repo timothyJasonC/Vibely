@@ -18,48 +18,51 @@ import VideoLayout from '@/components/video-layout';
 import { getUserCredentials } from '@/database/actions/user.action';
 import { TabType, UserParams } from '@/types';
 import { DocumentData } from 'firebase/firestore';
-import Cookie from 'js-cookie';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import AddPostButton from "@/components/AddPostButton";
 import { getPostCountsByUser, getPostsByUser } from "@/database/actions/post.action";
+import { auth } from "@/firebase/config";
+import Link from "next/link";
 
 export default function Home() {
   const router = useRouter()
   const [category, setCategory] = useState<TabType>("image");
-  const authToken = Cookie.get('auth_token');
   const [user, setUser] = useState<UserParams | DocumentData>()
   const [posts, setPosts] = useState<DocumentData[] | string>([]);
   const [postCounts, setPostCounts] = useState<Record<string, number>>({ image: 0, video: 0, blog: 0 });
   const [animationSetting, setAnimationSetting] = useState<Boolean>(false);
 
-  const getUser = async () => {
-    if (authToken) {
-      const userData = await getUserCredentials(authToken!);
-      
-      if (userData === "Something went wrong please login again") {
-        toast.error(userData);
-        router.push('/login');
-      } else {
-        setUser(userData);
-
-        const counts = await getPostCountsByUser(authToken!);
-        if (typeof counts === 'object') {
-          setPostCounts(counts);
-        } else {
-          toast.error(counts);
-        }
-
-        const postsData = await getPostsByUser(authToken!, category);
-        setPosts(postsData);
-      }
-    }
-  };
-
   useEffect(() => {
-    getUser();
+    const unsubscribe = auth.onAuthStateChanged(async (user: any) => {
+      if (user) {
+        try {
+          const userData = await getUserCredentials(user.uid);
+          setUser(userData);
+
+          const counts = await getPostCountsByUser(user.uid);
+          if (typeof counts === 'object') {
+            setPostCounts(counts);
+          } else {
+            toast.error(counts);
+          }
+
+          const postsData = await getPostsByUser(user.uid, category);
+          setPosts(postsData || []);
+        } catch (error) {
+          toast.error("Failed to fetch user data or posts.");
+        }
+      } else {
+        setUser(undefined)
+        setPosts([])
+        setPostCounts({ image: 0, video: 0, blog: 0 })
+        router.push('/login')
+      }
+    });
+
+    return () => unsubscribe()
   }, [category]);
 
   return (
@@ -109,7 +112,9 @@ export default function Home() {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="my-5">
-            {" "}
+            <Link href={'/edit'}>Edit Profile</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="my-5">
             <LogoutButton />
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -161,18 +166,16 @@ export default function Home() {
 
       <section className="description absolute flex bottom-[529px] w-[444px] px-9 py-[19.5px] rounded-[25px] ml-11 bg-[#E0F4FF] leading-[22.5px] text-[15px] tracking-[5%]">
         <p className="flex text-center">
-          Deskripsi akun akan ada diisni dan akan panjang tetapi tetap di dalam
-          kotak ini agar membatasi dan kotaknya tidak akan terlihat saat sudah
-          ada ini dan jangan lupa gunakan pembatas huruf ya
+          {user?.description ? user.description : "Deskripsi akun akan ada diisni dan akan panjang tetapi tetap di dalamkotak ini agar membatasi dan kotaknya tidak akan terlihat saat sudah ada ini dan jangan lupa gunakan pembatas huruf ya"}
         </p>
       </section>
 
       <ButtonSwitchPost category={category} setCategory={setCategory} />
 
       <section className='absolute bottom-16 w-[537px] h-[400px] overflow-y-auto scrollbar-hide'>
-        {category === "image" && <ImageLayout  posts={posts}/>}
-        {category === "video" && <VideoLayout posts={posts}/>}
-        {category === "blog" && <BlogLayout posts={posts}/>}
+        {category === "image" && <ImageLayout posts={posts} />}
+        {category === "video" && <VideoLayout posts={posts} />}
+        {category === "blog" && <BlogLayout posts={posts} />}
       </section>
 
       <AddPostButton />
