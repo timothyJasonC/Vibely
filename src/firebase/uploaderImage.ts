@@ -14,15 +14,12 @@ export async function uploadImage(fileData: string, path: string): Promise<strin
   const fileRef = ref(storage, `${path}/${new Date().toISOString()}.${fileExtension}`);
   
   try {
-    // Upload fileData ke Firebase Storage
     await uploadString(fileRef, fileData, 'data_url');
     
-    // Ambil URL download file
     const downloadURL = await getDownloadURL(fileRef);
 
     return downloadURL;
   } catch (error) {
-    console.error("Error uploading file: ", error);
     throw new Error("Failed to upload file");
   }
 }
@@ -33,15 +30,11 @@ export async function deleteImage(fileUrl: string): Promise<void> {
   }
 
   try {
-    // Buat referensi ke lokasi di Firebase Storage berdasarkan URL
     const fileRef = ref(storage, fileUrl);
 
-    // Hapus file dari Firebase Storage
     await deleteObject(fileRef);
 
-    console.log("File deleted successfully");
   } catch (error) {
-    console.error("Error deleting file: ", error);
     throw new Error("Failed to delete file");
   }
 }

@@ -1,8 +1,6 @@
 // "use server"
-import { handleError } from "@/lib/utils"
 import { doc, setDoc, getDocs, query, where, collection, getDoc, DocumentData, updateDoc } from 'firebase/firestore';
-import { auth, fireStore } from "@/firebase/config";
-import { updateEmail } from "firebase/auth";
+import { fireStore } from "@/firebase/config";
 
 export const googleLogin = async (email: string, profilePhoto: string, username: string, uid: string) => {
     try {
@@ -11,7 +9,6 @@ export const googleLogin = async (email: string, profilePhoto: string, username:
         const userDoc = await getDocs(query(collection(fireStore, 'users'), where('email', '==', email)));
 
         if (!userDoc.empty) {
-            console.log("User already exists, skipping creation.");
             const existingUserUid = userDoc.docs[0].id;
             return existingUserUid;
         }
@@ -22,11 +19,9 @@ export const googleLogin = async (email: string, profilePhoto: string, username:
             username,
             createdAt: new Date().toISOString(),
         });
-        console.log("User created successfully.");
         return uid
-    } catch (error) {
-        console.error("Error creating Google user:", error);
-        handleError(error);
+    } catch (error:any) {
+        throw new Error(error.message)
     }
 }
 

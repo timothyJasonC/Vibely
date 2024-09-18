@@ -30,7 +30,6 @@ export const createPost = async (title: string, contentLink: string, contentText
 
         return "Post created successfully";
     } catch (error) {
-        console.error("Error creating post:", error);
         return "Something went wrong, please login again";
     }
 }
@@ -46,7 +45,6 @@ export const getPostCountsByUser = async (userId: string) => {
         }
         return counts;
     } catch (error) {
-        console.error("Error fetching post counts:", error);
         return "Something went wrong, please try again";
     }
 }
@@ -92,7 +90,6 @@ export const getPostById = async (postId: string) => {
             return "Post not found";
         }
     } catch (error) {
-        console.error("Error fetching post:", error);
         return "Something went wrong, please try again";
     }
 };
