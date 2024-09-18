@@ -26,6 +26,7 @@ export default function EditProfileForm({ provider, user }: PageProps) {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
     const router = useRouter()
+    const userAuth = auth.currentUser;
 
     const formSchema = z.object({
         username: z.string().min(4, 'name must at least 8 characters').max(25, 'max characters is 25'),
@@ -56,52 +57,53 @@ export default function EditProfileForm({ provider, user }: PageProps) {
             username: user?.username,
             title: user?.title,
             description: user?.description,
-            email: user?.email
+            email: userAuth?.email!
         },
         mode: 'all'
     });
+    console.log(userAuth);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const userAuth = auth.currentUser;
+        const userAuth = await auth.currentUser;
 
         if (!userAuth) {
             toast.error('No user is logged in.');
-            return;
+            throw new Error('error ok');
+        } else {
+            try {
+                if (provider === 'email') {
+                    if (!values.oldPassword) {
+                        throw new Error('Old password is required');
+                    }
+                    await reauthenticateUser(userAuth.email!, values.oldPassword);
+                }
+
+                if (provider === 'email') {
+                    if (values.email !== userAuth.email) {
+                        await sendVerificationEmail(values.email!)
+                        toast.info('Verification email sent. Please check your email to verify the new address.');
+                    }
+                    if (values.password) {
+                        await updatePassword(userAuth, values.password);
+                    }
+                }
+
+                const update = await UpdateProfile(
+                    userAuth.uid,
+                    values.username || user.username,
+                    values.title || user.title,
+                    values.description || user.description,
+                );
+                console.log(update);
+
+                toast.success(`Profile updated successfully! ${values.email !== userAuth.email ? 'Verification email sent. Please check your email to verify the new address.' : ''}`);
+                router.push('/')
+            } catch (error: any) {
+                console.error('Error updating profile:', error);
+                toast.error(`Failed to update profile. ${error.message}`);
+            }
         }
 
-        try {
-            if (provider === 'email') {
-                if (!values.oldPassword) {
-                    throw new Error('Old password is required');
-                }
-                await reauthenticateUser(user.email!, values.oldPassword);
-            }
-
-            if (provider === 'email') {
-                if (values.email !== user.email) {
-                    await sendVerificationEmail(values.email!)
-                    toast.info('Verification email sent. Please check your email to verify the new address.');
-                }
-                if (values.password) {
-                    await updatePassword(userAuth, values.password);
-                }
-            }
-
-            const update = await UpdateProfile(
-                userAuth.uid,
-                values.username || user.username,
-                values.title || user.title,
-                values.description || user.description,
-                values.email || user.email
-            );
-            console.log(update);
-
-            toast.success(`Profile updated successfully! ${values.email !== user.email ? 'Verification email sent. Please check your email to verify the new address.' : ''}`);
-            router.push('/')
-        } catch (error) {
-            console.error('Error updating profile:', error);
-            toast.error('Failed to update profile.');
-        }
     }
 
 

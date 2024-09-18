@@ -55,11 +55,11 @@ export const UpdateImageProfile = async (userId: string, newProfilePhoto: string
     }
 }
 
-export const UpdateProfile = async (userId: string, username: string, title: string, description: string, email: string | undefined) => {
+export const UpdateProfile = async (userId: string, username: string, title: string, description: string) => {
     const userRef = doc(fireStore, 'users', userId);
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
-        await updateDoc(userRef, { username, title, description, email });
+        await updateDoc(userRef, { username, title, description });
         const updatedUserDoc = await getDoc(userRef);
         return updatedUserDoc
     } else {

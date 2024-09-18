@@ -1,9 +1,28 @@
 'use client'
 import UserForm from "@/components/UserForm"
+import { auth } from "@/firebase/config"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 function page() {
+    const router = useRouter()
+    const getUser = async () => {
+        const unsubscribe = auth.onAuthStateChanged(async (user: any) => {
+            if (user) {
+                router.push('/')
+            } else {
+                return
+            }
+            return () => unsubscribe()
+        })
+    }
+
+    useEffect(() => {
+        getUser();
+    }, []);
+
     return (
         <section className="h-full flex relative">
             <div className="absolute top-0 left-0">
@@ -31,7 +50,7 @@ function page() {
             </main>
 
             <div className="absolute bottom-0">
-            <div className="w-[1000px] h-40 bg-main"></div>
+                <div className="w-[1000px] h-40 bg-main"></div>
                 <Image src={'/waves-top.svg'} alt="waves-top" width={800} height={100} className="size-[1000px] h-36 absolute -left-64 -top-40 z-10" />
                 <Image src={'/waves-top.svg'} alt="waves-top" width={800} height={100} className="size-[1000px] h-36 absolute -left-64 rotate-180 -top-12 z-10" />
             </div>

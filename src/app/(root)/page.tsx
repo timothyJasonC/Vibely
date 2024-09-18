@@ -172,7 +172,7 @@ export default function Home() {
 
       <ButtonSwitchPost category={category} setCategory={setCategory} />
 
-      <section className='absolute bottom-16 w-[537px] h-[400px] overflow-y-auto scrollbar-hide'>
+      <section className='absolute bottom-32 w-[537px] h-[320px] overflow-y-auto scrollbar-hide'>
         {category === "image" && <ImageLayout posts={posts} />}
         {category === "video" && <VideoLayout posts={posts} />}
         {category === "blog" && <BlogLayout posts={posts} />}

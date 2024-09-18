@@ -1,9 +1,27 @@
 'use client'
 import UserForm from "@/components/UserForm"
+import { auth } from "@/firebase/config"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 function page() {
+    const router = useRouter()
+    const getUser = async () => {
+        const unsubscribe = auth.onAuthStateChanged(async (user: any) => {
+            if (user) {
+                router.push('/')
+            } else {
+                return
+            }
+            return () => unsubscribe()
+        })
+    }
+
+    useEffect(() => {
+        getUser();
+    }, []);
     return (
         <section className="h-full flex relative">
             <div className="absolute top-0 left-0">

@@ -21,14 +21,8 @@ export const reauthenticateUser = async (email: string, password: string) => {
 };
 
 export async function sendVerificationEmail(newEmail: string) {
-    if (!user) {
-        console.error("No user is signed in.");
-        return;
-    }
-
     try {
-        // Send verification email to the new email address
-        await verifyBeforeUpdateEmail(user, newEmail);
+        await verifyBeforeUpdateEmail(user!, newEmail);
         console.log("Verification email sent to new address. Please check your email and verify it.");
     } catch (error) {
         console.error("Error sending verification email:", error);

@@ -18,10 +18,6 @@ export default function Page() {
 
     const getUser = async () => {
         const unsubscribe = auth.onAuthStateChanged(async (user: any) => {
-//             const user = auth.currentUser;
-// console.log(user);
-// console.log(userAuth);
-
             if (user?.uid) {
                 const providerId = user.providerData[0]?.providerId;
                 if (providerId === 'google.com') {

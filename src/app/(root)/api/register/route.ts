@@ -10,7 +10,6 @@ export const POST = async (req: any) => {
         const user = userCredential.user;
 
         await setDoc(doc(fireStore, 'users', user.uid), {
-            email: user.email,
             createdAt: new Date().toISOString(),
         });
         return NextResponse.json({ message: 'User is registered and data saved to Firestore' }, { status: 200 });

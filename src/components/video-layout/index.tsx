@@ -10,7 +10,7 @@ export default function VideoLayout({ posts }: ImageLayoutProps) {
         <div className="video-gallery mt-10 mx-4 flex flex-col gap-4">
             {typeof posts !== 'string' && posts.map((video: any) => (
                 <Link key={video.id} href={`/post/${video.id}`}>
-                    <video key={video.id} controls src={video.contentLink} className="w-full h-28 rounded-2xl bg-gray-300"></video>
+                    <video key={video.id} controls src={video.contentLink} className="w-full h-28 rounded-2xl bg-gray-300 object-cover"></video>
                 </Link>
             ))}
         </div>
