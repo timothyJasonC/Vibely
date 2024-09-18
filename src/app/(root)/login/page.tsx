@@ -26,11 +26,11 @@ function Page() {
     return (
         <section className="h-full flex relative">
             <div className="absolute top-0 left-0">
-                <div className="w-[1000px] h-40 bg-main"></div>
+                <div className="w-[700px] md:w-[1000px] h-40 bg-main"></div>
                 <Image src={'/waves-header.svg'} alt="waves-header" width={532} height={200} className="size-[1000px] h-36 absolute top-8 -left-64 z-10" />
             </div>
 
-            <main className="flex flex-col gap-2 items-center justify-center -mt-52 mx-auto z-20">
+            <main className="flex flex-col gap-2 items-center justify-center -mt-24 md:-mt-52 mx-auto z-20">
                 <div className="flex gap-1 items-center mx-auto">
                     <Image src={'/favicon.ico'} alt="waves-top" width={50} height={50} />
                     <h1 className="tracking-widest font-extrabold text-4xl">IBELY</h1>
@@ -50,9 +50,9 @@ function Page() {
             </main>
 
             <div className="absolute bottom-0">
-                <div className="w-[1000px] h-40 bg-main"></div>
-                <Image src={'/waves-top.svg'} alt="waves-top" width={800} height={100} className="size-[1000px] h-36 absolute -left-64 -top-40 z-10" />
-                <Image src={'/waves-top.svg'} alt="waves-top" width={800} height={100} className="size-[1000px] h-36 absolute -left-64 rotate-180 -top-12 z-10" />
+                <div className="w-[700px] md:w-[1000px] h-40 bg-main"></div>
+                <Image src={'/waves-top.svg'} alt="waves-top" width={800} height={100} className="size-[700px] md:size-[1000px] h-28 md:h-36 absolute -left-64 -top-16 md:-top-40 z-10" />
+                <Image src={'/waves-top.svg'} alt="waves-top" width={800} height={100} className="size-[700px] md:size-[1000px] h-28 md:h-36 absolute -left-64 rotate-180 top-2 md:-top-12 z-10" />
             </div>
 
         </section>

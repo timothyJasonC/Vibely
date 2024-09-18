@@ -61,7 +61,6 @@ export default function EditProfileForm({ provider, user }: PageProps) {
         },
         mode: 'all'
     });
-    console.log(userAuth);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const userAuth = auth.currentUser;
@@ -94,12 +93,10 @@ export default function EditProfileForm({ provider, user }: PageProps) {
                     values.title || user.title,
                     values.description || user.description,
                 );
-                console.log(update);
 
                 toast.success(`Profile updated successfully! ${values.email !== userAuth.email ? 'Verification email sent. Please check your email to verify the new address.' : ''}`);
                 router.push('/')
             } catch (error: any) {
-                console.error('Error updating profile:', error);
                 toast.error(`Failed to update profile. ${error.message}`);
             }
         }
@@ -111,7 +108,7 @@ export default function EditProfileForm({ provider, user }: PageProps) {
     return (
         <>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="w-full flex flex-col gap-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="w-full flex flex-col gap-2 md:gap-4">
                     <FormField
                         control={form.control}
                         name="username"

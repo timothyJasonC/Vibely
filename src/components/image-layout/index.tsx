@@ -7,17 +7,17 @@ interface ImageLayoutProps {
 
 export default function ImageLayout({ posts }: ImageLayoutProps) {
   return (
-    <div className="image-gallery mt-10 mx-4 grid grid-cols-12 gap-4">
+    <div className="image-gallery w-[300px] md:w-[500px] mt-10 mx-4 grid grid-cols-12 md:grid-cols-12 gap-1 md:gap-4">
       {typeof posts !== 'string' && posts.map((image, index: any) => (
         <div
           key={image.id}
           className={`rounded-2xl bg-gray-300 overflow-hidden
-             ${index % 6 === 0 ? 'h-48' : ''} 
-             ${index % 6 === 1 ? 'h-80' : ''} 
-             ${index % 6 === 2 ? 'h-56' : ''} 
-             ${index % 6 === 3 ? 'h-52' : ''} 
-             ${index % 6 === 4 ? 'h-24' : ''} 
-             ${index % 6 === 5 ? 'h-24' : ''}`
+             ${index % 6 === 0 ? 'h-24 md:h-48' : ''} 
+             ${index % 6 === 1 ? 'h-40 md:h-80' : ''} 
+             ${index % 6 === 2 ? 'h-28 md:h-56' : ''} 
+             ${index % 6 === 3 ? 'h-28 md:h-52' : ''} 
+             ${index % 6 === 4 ? 'h-12 md:h-24' : ''} 
+             ${index % 6 === 5 ? 'h-12 md:h-24' : ''}`
           }
           style={{
             gridColumn: getColumnSpan(index % 6),
@@ -47,7 +47,7 @@ function getColumnSpan(index: any) {
     case 1:
       return "span 6";
     case 5:
-      return "span 12"
+      return "span 12";
     default:
       return "span 12";
   }

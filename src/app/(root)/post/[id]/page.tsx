@@ -21,7 +21,6 @@ export default function PostPage({ params: { id } }: PageProps) {
         const fetchPost = async () => {
             const postData = await getPostById(id)
             if (typeof postData === "string") {
-                console.error(postData);
                 setNotFound(true);
             } else {
                 setPost(postData)
@@ -51,7 +50,7 @@ export default function PostPage({ params: { id } }: PageProps) {
                 src="/cover.jpg"
                 className="absolute"
             />
-            <div className='p-12 py-12 mx-auto z-20 relative'>
+            <div className='p-2 md:p-12 py-12 mx-auto z-20 relative'>
                 <Image
                     width={535}
                     height={145}
@@ -59,7 +58,7 @@ export default function PostPage({ params: { id } }: PageProps) {
                     src="/cover-post.png"
                     className='bg-primary-50 rounded-t-3xl border-0'
                 />
-                <div className='bg-primary-50 flex flex-col gap-2 p-4 h-[700px] pb-20 rounded-b-3xl'>
+                <div className='bg-primary-50 flex flex-col gap-2 p-4 h-[500px] md:h-[700px] pb-20 rounded-b-3xl'>
                     <p className='font-extralight text-sm'>
                         {post ? new Date(post.createdAt).toLocaleDateString() : 'Tanggal tidak ditemukan'}
                     </p>
@@ -73,7 +72,7 @@ export default function PostPage({ params: { id } }: PageProps) {
                             className={`w-full ${post?.postType !== 'blog' ? 'h-full' : 'h-44'} object-cover items-center`}
                         />
                     ) : (
-                        <video controls src={post?.contentLink} className="w-full h-[500px] rounded-2xl bg-gray-300"></video>
+                        <video controls src={post?.contentLink} className="w-full h-[400px\] md:h-[500px] rounded-2xl bg-gray-300"></video>
                     )}
                     <p className='w-[300px] h-64 font-light'>{post ? post.contentText : 'Konten tidak ditemukan'}</p>
                 </div>

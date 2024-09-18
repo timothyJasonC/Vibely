@@ -22,12 +22,12 @@ const ButtonSwitchPost: React.FC<Props> = ({ setCategory, category }) => {
 
   return (
     <>
-      <div className="flex flex-row bg-[#E0F4FF] m-auto relative top-[350px] w-2/3 mx-auto rounded-full gap-3">
+      <div className="flex flex-row items-center bg-[#E0F4FF] m-auto relative w-full md:w-2/3 mx-auto rounded-full md:gap-3">
         <img
           src="/img/button/LayoutImage.svg"
           alt="Image Post"
-          className={`cursor-pointer py-2 ${
-            categoryPost === "image" ? "hover-category-active" : "px-7"
+          className={`cursor-pointer ${
+            categoryPost === "image" ? "hover-category-active" : "px-7 h-8"
           }`}
           title="image"
           onClick={handleActive}
@@ -37,7 +37,7 @@ const ButtonSwitchPost: React.FC<Props> = ({ setCategory, category }) => {
           alt="Video Post"
           width={100} height={60}
           className={`cursor-pointer py-2 ${
-            categoryPost === "video" ? "hover-category-active w-32" : "px-7"
+            categoryPost === "video" ? "hover-category-active w-32" : "px-7 h-12"
           }`}
           title="video"
           onClick={handleActive}
@@ -46,7 +46,7 @@ const ButtonSwitchPost: React.FC<Props> = ({ setCategory, category }) => {
           src="/img/button/LayoutBlog.svg"
           alt="Blog Post"
           className={`cursor-pointer py-2 ${
-            categoryPost === "blog" ? "hover-category-active" : "px-7"
+            categoryPost === "blog" ? "hover-category-active" : "px-7 h-12"
           }`}
           title="blog"
           onClick={handleActive}

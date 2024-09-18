@@ -84,7 +84,7 @@ function UserForm({ type }: UserFormProps) {
     return (
         <>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-[356px] gap-2">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col md:w-[356px] gap-2">
                     <FormField
                         control={form.control}
                         name="email"

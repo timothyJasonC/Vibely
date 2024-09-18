@@ -55,8 +55,8 @@ export default function ImageProfileEdit({ setUser }: ImageProfileEditProps) {
 
     return (
         <AlertDialog>
-            <AlertDialogTrigger className='absolute text-white text-xl font-extrabold rounded-full inset-0 top-0 hover:opacity-100 hover:cursor-pointer opacity-0 h-[139px] w-[139px] border-white transition-opacity duration-300 flex justify-center items-center bg-gray-400 bg-opacity-50 z-20'>Change</AlertDialogTrigger>
-            <AlertDialogContent className="text-center items-center flex flex-col max-w-xs">
+            <AlertDialogTrigger className='absolute text-white text-xl font-extrabold rounded-full inset-0 top-0 hover:opacity-100 hover:cursor-pointer opacity-0 w-[100px] md:w-[139px] h-[100px] md:h-[139px] border-white transition-opacity duration-300 flex justify-center items-center bg-gray-400 bg-opacity-50 z-20'>Change</AlertDialogTrigger>
+            <AlertDialogContent className="text-center items-center flex flex-col md:max-w-xs max-md:absolute max-md:w-[300px]">
                 <AlertDialogHeader>
                     <AlertDialogTitle className="text-center pt-4">Edit Your Profile Image Here!</AlertDialogTitle>
                     <AlertDialogDescription>
