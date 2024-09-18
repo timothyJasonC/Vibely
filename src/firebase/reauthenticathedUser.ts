@@ -3,10 +3,12 @@ import { auth } from "@/firebase/config";
 import { EmailAuthProvider, reauthenticateWithCredential, updateEmail, verifyBeforeUpdateEmail } from "firebase/auth";
 
 const user = auth.currentUser;
-export const reauthenticateUser = async (email: string, password: string) => {
+console.log(user?.email);
 
-    if (user) {
-        const credential = EmailAuthProvider.credential(email, password);
+export const reauthenticateUser = async (password: string) => {
+    const user = auth.currentUser;
+    if (user?.email) {
+        const credential = EmailAuthProvider.credential(user?.email, password);
 
         try {
             await reauthenticateWithCredential(user, credential);

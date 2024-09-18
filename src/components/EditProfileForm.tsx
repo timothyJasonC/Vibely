@@ -64,7 +64,7 @@ export default function EditProfileForm({ provider, user }: PageProps) {
     console.log(userAuth);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const userAuth = await auth.currentUser;
+        const userAuth = auth.currentUser;
 
         if (!userAuth) {
             toast.error('No user is logged in.');
@@ -75,7 +75,7 @@ export default function EditProfileForm({ provider, user }: PageProps) {
                     if (!values.oldPassword) {
                         throw new Error('Old password is required');
                     }
-                    await reauthenticateUser(userAuth.email!, values.oldPassword);
+                    await reauthenticateUser(values.oldPassword);
                 }
 
                 if (provider === 'email') {
