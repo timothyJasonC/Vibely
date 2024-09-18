@@ -6,7 +6,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 
-function page() {
+function Page() {
     const router = useRouter()
     const getUser = async () => {
         const unsubscribe = auth.onAuthStateChanged(async (user: any) => {
@@ -58,4 +58,4 @@ function page() {
     )
 }
 
-export default page
+export default Page
