@@ -42,25 +42,24 @@ export default function Dropdown() {
                 tabIndex={-1}
             >
                 <div className="py-1" role="none">
-                    <a
-                        href="#"
+                    <Link
+                        href={'/edit'}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                         tabIndex={-1}
                         id="menu-item-0"
                     >
-                        <Link href={'/edit'}>Edit Profile</Link>
-                    </a>
-                    <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        Edit Profile
+                    </Link>
+                    <button
+                        className="block w-full text-start px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                         tabIndex={-1}
                         id="menu-item-1"
                     >
                         <LogoutButton />
 
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>

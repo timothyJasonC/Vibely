@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { getPostById } from '@/database/actions/post.action';
 import { DocumentData } from 'firebase/firestore';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner';
 
@@ -16,6 +17,7 @@ interface PageProps {
 export default function PostPage({ params: { id } }: PageProps) {
     const [post, setPost] = useState<DocumentData | null>(null)
     const [notFound, setNotFound] = useState<boolean>(false);
+    const router = useRouter()
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -37,6 +39,10 @@ export default function PostPage({ params: { id } }: PageProps) {
             toast.error('Failed to copy link');
         }
     };
+
+    function back() {
+        router.back()
+    }
 
     if (notFound) return <NotFound />
 
@@ -76,6 +82,7 @@ export default function PostPage({ params: { id } }: PageProps) {
                     )}
                     <p className='w-[300px] h-64 font-light'>{post ? post.contentText : 'Konten tidak ditemukan'}</p>
                 </div>
+                <Button onClick={back} className='absolute bottom-20 bg-main text-black hover:bg-primary-100 transition-all duration-300 left-20'>Back</Button>
                 <Button onClick={handleCopyLink} className='absolute bottom-20 right-20'>Share</Button>
             </div>
         </div>
